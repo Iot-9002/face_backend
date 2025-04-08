@@ -6,3 +6,4 @@ mediapipe
 scikit-learn
 flask-cors
 imgaug
+keras-facenet
