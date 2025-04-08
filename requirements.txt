@@ -4,3 +4,4 @@ numpy
 cloudinary
 mediapipe
 scikit-learn
+flask-cors
