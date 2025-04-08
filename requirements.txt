@@ -7,3 +7,4 @@ scikit-learn
 keras-facenet
 mtcnn
 cloudinary
+tensorflow
