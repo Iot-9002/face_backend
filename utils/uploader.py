@@ -1,5 +1,4 @@
 import cloudinary.uploader
-import os
 
 def upload_pkl_to_cloudinary(pkl_path, user_id):
     result = cloudinary.uploader.upload_large(
