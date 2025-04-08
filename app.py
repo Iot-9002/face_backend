@@ -2,11 +2,13 @@ import os
 import uuid
 import traceback
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # 👈 NEW
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
+CORS(app)  # 👈 NEW: This allows requests from other domains (like your frontend)
 
 @app.route('/upload_video', methods=['POST'])
 def upload_video():
