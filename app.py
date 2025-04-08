@@ -12,10 +12,13 @@ UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
-CORS(app)  # ✅ Enables cross-origin requests
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)  # ✅ Full CORS
 
-@app.route('/upload_video', methods=['POST'])
+@app.route('/upload_video', methods=['OPTIONS', 'POST'])
 def upload_video():
+    if request.method == 'OPTIONS':
+        return '', 200  # ✅ Handle CORS preflight request
+
     file = request.files.get('video')
     user_id = request.form.get('user_id')
 
@@ -26,12 +29,14 @@ def upload_video():
     file.save(video_path)
 
     try:
+        print("✅ Upload received and saved:", video_path)
         faces_dir = extract_faces_from_video(video_path, user_id)
         augmented_dir = augment_faces(faces_dir)
         pkl_path = generate_embeddings(augmented_dir, user_id)
         cloud_url = upload_pkl_to_cloudinary(pkl_path, user_id)
         return jsonify({'cloud_url': cloud_url}), 200
     except Exception as e:
+        print("❌ Error:", e)
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
