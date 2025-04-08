@@ -1,9 +1,11 @@
 flask
+flask-cors
 opencv-python-headless
 numpy
 cloudinary
 mediapipe
 scikit-learn
-flask-cors
 imgaug
 keras-facenet
+tensorflow
+Pillow
