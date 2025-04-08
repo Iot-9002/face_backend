@@ -1,10 +1,8 @@
-Flask
+flask
 opencv-python-headless
-mediapipe
-imgaug
 numpy
-scikit-learn
-keras-facenet
-mtcnn
 cloudinary
-tensorflow
+mediapipe
+scikit-learn
+flask-cors
+imgaug
