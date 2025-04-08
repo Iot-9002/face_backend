@@ -1,10 +1,6 @@
 import os
 import uuid
 from flask import Flask, request, jsonify
-from utils.face_extraction import extract_faces_from_video
-from utils.augmentation import augment_faces
-from utils.embedding_generator import generate_embeddings
-from utils.uploader import upload_pkl_to_cloudinary
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -23,21 +19,28 @@ def upload_video():
     file.save(video_path)
 
     try:
-        # Extract faces from video
+        # Import heavy functions **inside** the route (saves memory on startup)
+        from utils.face_extraction import extract_faces_from_video
+        from utils.augmentation import augment_faces
+        from utils.embedding_generator import generate_embeddings
+        from utils.uploader import upload_pkl_to_cloudinary
+
+        # Step 1: Extract faces from video
         faces_dir = extract_faces_from_video(video_path, user_id)
 
-        # Apply data augmentation
+        # Step 2: Apply data augmentation
         augmented_dir = augment_faces(faces_dir)
 
-        # Generate embeddings and save them
+        # Step 3: Generate embeddings and save them
         pkl_path = generate_embeddings(augmented_dir, user_id)
 
-        # Upload the pickle file to Cloudinary
+        # Step 4: Upload the pickle file to Cloudinary
         cloud_url = upload_pkl_to_cloudinary(pkl_path, user_id)
 
         return jsonify({'cloud_url': cloud_url}), 200
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
